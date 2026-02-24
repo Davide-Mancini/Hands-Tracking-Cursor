@@ -1,11 +1,13 @@
+# Importo la libreria pyautogui per controllare il cursore del mouse e le azioni del mouse come click e drag
 import pyautogui
 import collections
 import math
 import time
-prev_x, prev_y = 0,0
-smooth_factor = 0.2
 
-click_treshold_z = -0.05
+# prev_x, prev_y = 0,0
+# smooth_factor = 0.2
+
+# click_treshold_z = -0.05
 click_state = False
 drag_state = False
 
@@ -42,12 +44,15 @@ def check_click_forward(hand, screen_w, screen_h):
     #     print(click_state)
     # NUOVO METODO PER IL CLICK BASATO SULLA DISTANZA TRA POLLICE E PALMO, PIU AFFIDABILE E PRECISO
     global click_state
+    # Recupero riferimento al pollice e al centro del palmo
     thumb = hand[4]
     palm_center = hand[9]
+    # Calcolo la distanza tra il pollice e il centro del palmo usando il teorema di Pitagora, considerando le coordinate normalizzate x e y
     dist = math.hypot(
         thumb.x - palm_center.x,
         thumb.y - palm_center.y,
     )
+    # Soglia di distanza per riconoscere il click, se la distanza è inferiore alla soglia e non siamo già in stato di click, esegue un click e imposta lo stato di click a True, altrimenti se la distanza è superiore o uguale alla soglia e siamo in stato di click, resetta lo stato di click a False. In questo modo si evita di eseguire click multipli quando il pollice è vicino al palmo. La soglia può essere regolata in base alla sensibilità desiderata.
     CLICK_TRESHOLD= 0.08
     if dist < CLICK_TRESHOLD and not click_state:
         pyautogui.click()
@@ -59,7 +64,8 @@ def check_pinch_drag (hand, screen_w, screen_h):
     global drag_state
     thumb = hand[4]
     index = hand[8]
-
+    # Conversione coordinate normalizzate in pixel per calcolare la distanza tra pollice e indice, se la distanza è inferiore alla soglia e non siamo già in stato di drag, 
+    # esegue un mouseDown e imposta lo stato di drag a True, altrimenti se la distanza è superiore o uguale alla soglia e siamo in stato di drag, esegue un mouseUp e resetta lo stato di drag a False. In questo modo si permette di trascinare gli oggetti tenendo premuto il mouse quando il pollice e l'indice sono vicini, e rilasciare quando si allontanano.
     thumb_x, thumb_y = int(thumb.x * screen_w), int(thumb.y * screen_h)
     index_x, index_y = int(index.x * screen_w), int(index.y * screen_h)
     dist = ((thumb_x - index_x) ** 2 + (thumb_y - index_y) ** 2) ** 0.5
