@@ -8,6 +8,10 @@ HAND_CONNECTIONS=[
     (0,17),(17,18),(18,19),(19,20)  # mignolo
 ]
 
+# Funzione che disegna i punti di riferimento delle mani e le connessioni tra di essi sul frame video, prende in input il frame e i punti di riferimento della mano, 
+# calcola le coordinate in pixel dei punti di riferimento e disegna cerchi per ogni punto e linee per ogni connessione definita nell'array HAND_CONNECTIONS.
+#  Le coordinate dei punti di riferimento sono normalizzate tra 0 e 1, quindi vengono moltiplicate per la larghezza e l'altezza del frame per ottenere le coordinate in pixel.
+#  I cerchi vengono disegnati in verde e le linee in blu.
 def draw_hand_landmarks(frame, hand_landmarks):
     h, w, _ = frame.shape
     for lm in hand_landmarks:
